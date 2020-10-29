@@ -66,7 +66,8 @@ rules:
   - name: go-error-fmt
     actions:
       codelingo/review:
-        comment: Error strings should not be capitalized (unless beginning with proper nouns 
+        comment: |
+          Error strings should not be capitalized (unless beginning with proper nouns 
           or acronyms) or end with punctuation, since they are usually printed following
           other context.
       codelingo/docs:
@@ -80,27 +81,28 @@ rules:
 
           ## Bad code
           ```golang
-          // ReadConfig opens a file
-          func ReadConfig(path string) error {
-            file, err := os.Open(path)
+          // ReadConfig reads a file and prints the contents to the console
+          func ReadConfig(filename string) error {
+            file, err := ioutil.ReadFile(filename)
             if err != nil {
-              return fmt.Errorf("Error opening config file.")
+              return fmt.Errorf("Error reading config file.")
             }
 
-            defer file.Close()
+            fmt.Println(string(file))
             return nil
           }
           ```
+          
           ## Good code
           ```golang
-          // ReadConfig opens a file
-          func ReadConfig(path string) error {
-            file, err := os.Open(path)
+          // ReadConfig reads a file and prints the contents to the console
+          func ReadConfig(filename string) error {
+            file, err := ioutil.ReadFile(filename)
             if err != nil {
-              return fmt.Errorf("error opening config file")
+              return fmt.Errorf("error reading config file")
             }
 
-            defer file.Close()
+            fmt.Println(string(file))
             return nil
           }
           ```
