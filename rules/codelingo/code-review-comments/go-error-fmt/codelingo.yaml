@@ -62,24 +62,58 @@ funcs:
 
         return surroundWithQuotes(escapeGoFormat(uncapitalizeFirstLetter(removeTrailingPunctuation(text))))
       }
-tenets:
+rules:
   - name: go-error-fmt
     actions:
-      codelingo/rewrite:
-      codelingo/docs:
-        title: Go Error Format
-        body: |
-          Error strings should not be capitalized (unless beginning with proper nouns 
-          or acronyms) or end with punctuation, since they are usually printed following
-          other context. That is, use fmt.Errorf("something bad") not fmt.Errorf("Something bad"),
-          so that log.Printf("Reading %s: %v", filename, err) formats without a spurious 
-          capital letter mid-message. This does not apply to logging, which is implicitly
-          line-oriented and not combined inside other messages.
       codelingo/review:
         comment: |
           Error strings should not be capitalized (unless beginning with proper nouns 
           or acronyms) or end with punctuation, since they are usually printed following
           other context.
+      codelingo/docs:
+        title: Go Error Format
+        body: |
+          Error strings should not be capitalized (unless beginning with proper nouns 
+          or acronyms) or end with punctuation. For instance, use errors.New("something bad") 
+          instead of errors.New("Something bad"), so that log.Printf("Reading %s: %v", filename, err) 
+          formats without a spurious capital letter mid-message. This does not apply to logging, 
+          which is implicitly line-oriented and not combined inside other messages.
+
+          ## Bad code
+          ```golang
+          // ReadConfig reads a config file and returns a key-value map.
+          func ReadConfig(filename string) (map[string]string, error) {
+            data, err := ioutil.ReadFile(filename)
+            if err != nil {
+              return nil, errors.New("Error reading config file.")
+            }
+
+            var config map[string]string
+            if err := yaml.Unmarshal(data, &config); err != nil {
+              return nil, err
+            }
+
+            return config, nil
+          }
+          ```
+          
+          ## Good code
+          ```golang
+          // ReadConfig reads a config file and returns a key-value map.
+          func ReadConfig(filename string) (map[string]string, error) {
+            data, err := ioutil.ReadFile(filename)
+            if err != nil {
+              return nil, errors.New("error reading config file")
+            }
+
+            var config map[string]string
+            if err := yaml.Unmarshal(data, &config); err != nil {
+              return nil, err
+            }
+
+            return config, nil
+          }
+          ```
     query: |
       import codelingo/ast/go
 
