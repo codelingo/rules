@@ -81,29 +81,37 @@ rules:
 
           ## Bad code
           ```golang
-          // ReadConfig reads a file and prints the contents to the console
-          func ReadConfig(filename string) error {
-            file, err := ioutil.ReadFile(filename)
+          // ReadConfig reads a config file and returns a key-value map.
+          func ReadConfig(filename string) (map[string]string, error) {
+            data, err := ioutil.ReadFile(filename)
             if err != nil {
-              return fmt.Errorf("Error reading config file.")
+              return nil, fmt.Errorf("%v: Error reading config file.", err)
             }
 
-            fmt.Println(string(file))
-            return nil
+            var config map[string]string
+            if err := yaml.Unmarshal(data, &config); err != nil {
+              return nil, err
+            }
+
+            return config, nil
           }
           ```
           
           ## Good code
           ```golang
-          // ReadConfig reads a file and prints the contents to the console
-          func ReadConfig(filename string) error {
-            file, err := ioutil.ReadFile(filename)
+          // ReadConfig reads a config file and returns a key-value map.
+          func ReadConfig(filename string) (map[string]string, error) {
+            data, err := ioutil.ReadFile(filename)
             if err != nil {
-              return fmt.Errorf("error reading config file")
+              return nil, fmt.Errorf("%v: error reading config file", err)
             }
 
-            fmt.Println(string(file))
-            return nil
+            var config map[string]string
+            if err := yaml.Unmarshal(data, &config); err != nil {
+              return nil, err
+            }
+
+            return config, nil
           }
           ```
     query: |
