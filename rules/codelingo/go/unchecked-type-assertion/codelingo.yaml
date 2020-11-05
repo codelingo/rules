@@ -38,8 +38,10 @@ tenets:
           }
           ```
       codelingo/review:
-        comment: Unchecked type assertions can cause panics. Check for success with the x, ok := y.(type) style.
-        From [Effective Go](https://golang.org/doc/effective_go.html#interface_conversions).
+        comment: |
+          Unchecked type assertions can cause panics. Check for success with the x, ok := y.(type) style.
+
+          From [Effective Go](https://golang.org/doc/effective_go.html#interface_conversions).
     query: |
       import codelingo/ast/go
 
